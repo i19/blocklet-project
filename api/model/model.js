@@ -23,7 +23,7 @@ class Model {
     Object.keys(columns).forEach((k) => {
       if (k !== 'id') this.#columns[k] = columns[k];
     });
-    this.#columns['created_at'] = 'DATETIME DEFAULT CURRENT_TIMESTAMP';
+    this.#columns['created_at'] = 'TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP';
 
     // 常用 db 操作 statement
     this.#insertStmt = null;

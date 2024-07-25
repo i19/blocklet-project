@@ -18,12 +18,22 @@ const isProduction = process.env.NODE_ENV === 'production' || process.env.ABT_NO
   const userService = require('./model/user');
   await userService.init();
   if (!isProduction) {
-    for (let i = 10; i < 50; i++) {
-      userService.create({
-        name: `zhangsan${i}`,
-        email: `a${i}@b.com`,
-        phone: `156523085${i}`,
-      });
+    try {
+      await userService.getByID(1);
+    } catch (error) {
+      try {
+        userService.create({
+          name: '张三',
+          birthDay: '1990-01-15',
+          gender: 1,
+          email: 'zhangsan@example.com',
+          phone: '13800138000',
+          home_address: '北京市朝阳区某街道1号',
+          work_address: '北京市海淀区某大厦15层',
+        });
+      } catch (ne) {
+        console.error(ne);
+      }
     }
   }
 })();

@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require('joi').extend(require('@joi/date'));
 const util = require('../utils/utils');
 const model = require('./model');
 
@@ -8,22 +8,34 @@ class UserService extends model.Model {
       tableName: 'users',
       columns: {
         name: 'TEXT NOT NULL',
+        birthDay: 'DATE NOT NULL',
+        gender: 'TINYINT NOT NULL DEFAULT 0',
         email: 'TEXT UNIQUE',
         phone: 'TEXT UNIQUE',
+        home_address: 'TEXT',
+        work_address: 'TEXT',
       },
       insertValidator: Joi.object({
-        name: Joi.string().min(1).max(64).required(),
+        name: Joi.string().min(1).max(32).required(),
+        birthDay: Joi.date().less('now').format('YYYY-MM-DD').raw().required(),
+        gender: Joi.number().integer().min(0).max(2).required(),
         email: Joi.string().email().required(),
         phone: Joi.string().pattern(util.joiPhonePattern).required(),
+        home_address: Joi.string().allow('').optional(),
+        work_address: Joi.string().allow('').optional(),
       }),
       updateValidator: Joi.object({
         name: Joi.string().min(1).max(64),
+        birthDay: Joi.date().less('now').format('YYYY-MM-DD').raw(),
+        gender: Joi.number().integer().min(0).max(2),
         email: Joi.string().email(),
         phone: Joi.string().pattern(util.joiPhonePattern),
+        home_address: Joi.string().allow(''),
+        work_address: Joi.string().allow(''),
       })
         .min(1)
         .messages({
-          'object.min': `update operation nedd at least one field name or email or phone`,
+          'object.min': 'Update operation needs at least one field: name, email, or phone',
         }),
     });
   }
