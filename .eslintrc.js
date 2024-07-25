@@ -3,6 +3,10 @@ module.exports = {
   env: {
     node: true,
   },
+  parserOptions: {
+    ecmaVersion: 13,
+  },
+
   extends: ['plugin:vue/vue3-essential', 'eslint:recommended', 'plugin:prettier/recommended'],
   globals: {
     // Ref sugar (take 2)

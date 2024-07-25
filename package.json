@@ -23,11 +23,13 @@
     "@ocap/mcrypto": "^1.18.126",
     "@ocap/wallet": "^1.18.126",
     "axios": "^1.7.2",
+    "better-sqlite3": "^11.1.2",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv-flow": "^4.1.0",
     "express": "^4.19.2",
-    "express-async-errors": "^3.1.1"
+    "express-async-errors": "^3.1.1",
+    "joi": "^17.13.3"
   },
   "devDependencies": {
     "@blocklet/js-sdk": "^1.16.28",

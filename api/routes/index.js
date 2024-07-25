@@ -9,4 +9,6 @@ router.use('/data', (req, res) =>
   }),
 );
 
+router.use('/user', require('./user'));
+
 module.exports = router;
