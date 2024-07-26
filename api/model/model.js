@@ -68,6 +68,8 @@ class Model {
   }
 
   async update(id, data) {
+    delete data['id'];
+    delete data['created_at'];
     const { error, value } = this.#updateValidator.validate(data);
     if (error) throw new myError.ValidationError(error);
 

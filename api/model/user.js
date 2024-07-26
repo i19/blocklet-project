@@ -8,7 +8,7 @@ class UserService extends model.Model {
       tableName: 'users',
       columns: {
         name: 'TEXT NOT NULL',
-        birthDay: 'DATE NOT NULL',
+        birth_day: 'DATE NOT NULL',
         gender: 'TINYINT NOT NULL DEFAULT 0',
         email: 'TEXT UNIQUE',
         phone: 'TEXT UNIQUE',
@@ -17,7 +17,7 @@ class UserService extends model.Model {
       },
       insertValidator: Joi.object({
         name: Joi.string().min(1).max(32).required(),
-        birthDay: Joi.date().less('now').format('YYYY-MM-DD').raw().required(),
+        birth_day: Joi.date().less('now').format('YYYY-MM-DD').raw().required(),
         gender: Joi.number().integer().min(0).max(2).required(),
         email: Joi.string().email().required(),
         phone: Joi.string().pattern(util.joiPhonePattern).required(),
@@ -26,8 +26,8 @@ class UserService extends model.Model {
       }),
       updateValidator: Joi.object({
         name: Joi.string().min(1).max(64),
-        birthDay: Joi.date().less('now').format('YYYY-MM-DD').raw(),
-        gender: Joi.number().integer().min(0).max(2),
+        birth_day: Joi.date().less('now').format('YYYY-MM-DD').raw(),
+        gender: Joi.number().integer().min(0).max(1),
         email: Joi.string().email(),
         phone: Joi.string().pattern(util.joiPhonePattern),
         home_address: Joi.string().allow(''),
@@ -35,7 +35,8 @@ class UserService extends model.Model {
       })
         .min(1)
         .messages({
-          'object.min': 'Update operation needs at least one field: name, email, or phone',
+          'object.min':
+            'Update operation needs at least one field: [name, birth_day, gender, email, home_address, work_address]',
         }),
     });
   }

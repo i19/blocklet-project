@@ -24,7 +24,7 @@ const isProduction = process.env.NODE_ENV === 'production' || process.env.ABT_NO
       try {
         userService.create({
           name: '张三',
-          birthDay: '1990-01-15',
+          birth_day: '1990-01-15',
           gender: 1,
           email: 'zhangsan@example.com',
           phone: '13800138000',
