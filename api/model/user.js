@@ -24,15 +24,6 @@ class UserService extends model.Model {
         home_address: Joi.string().allow('').optional(),
         work_address: Joi.string().allow('').optional(),
       }),
-      updateValidator: Joi.object({
-        name: Joi.string().min(1).max(64),
-        birth_day: Joi.date().less('now').format('YYYY-MM-DD').raw(),
-        gender: Joi.number().integer().min(0).max(1),
-        email: Joi.string().email(),
-        phone: Joi.string().pattern(util.joiPhonePattern),
-        home_address: Joi.string().allow(''),
-        work_address: Joi.string().allow(''),
-      }),
     });
   }
 }
