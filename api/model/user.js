@@ -32,12 +32,7 @@ class UserService extends model.Model {
         phone: Joi.string().pattern(util.joiPhonePattern),
         home_address: Joi.string().allow(''),
         work_address: Joi.string().allow(''),
-      })
-        .min(1)
-        .messages({
-          'object.min':
-            'Update operation needs at least one field: [name, birth_day, gender, email, home_address, work_address]',
-        }),
+      }),
     });
   }
 }

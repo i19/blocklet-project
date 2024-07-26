@@ -71,8 +71,11 @@ class Model {
     delete data['id'];
     delete data['created_at'];
     const { error, value } = this.#updateValidator.validate(data);
-    if (error) throw new myError.ValidationError(error);
 
+    if (error) throw new myError.ValidationError(error);
+    if (Object.keys(value).length == 0) {
+      return;
+    }
     const setClause = Object.keys(value)
       .map((key) => `${key} = @${key}`)
       .join(', ');

@@ -1,147 +1,150 @@
-# Getting Started with Create Blocklet
+该项目是基于 Blocklet 的 Express + Vue3 为模板开发，使用 sqlite 做存储。
 
-This project was bootstrapped with [Create Blocklet](https://github.com/blocklet/create-blocklet).
+引入了 环境变量 DB_FILE，设置数据库的存储路径，默认 `./api/db.sqlite`
 
-This blocklet is a static project, which means this is a frontend application. It's contained `client` code.
+启动方式
+请先设置好 blocklet 环境
 
-## File Structure
+```
+export DB_FILE="./abc.sqlite"  && blocklet dev
+会输出如下内容
+...
+ℹ You can access with the following URL
 
-- public/ - static files
-  - favicon.ico - favicon
-  - favicon.svg - favicon
-- index.html - main html file, template for vite vue
-- screenshots/ - Screenshots
-- src/ - Client side code (A standard vue app structure)
-- .env - Environment variables
-- .env.local - Local environment variables
-- .eslintrc.js - ESLint configuration
-- .gitignore - Git ignore file
-- .prettierrc - Prettier configuration
-- blocklet.md - Blocklet README
-- blocklet.yml - Blocklet configuration
-- LICENSE - License file
-- logo.png - Blocklet logo file
-- Makefile - Makefile
-- package.json - Npm package file
-- README.md - A guide for this blocklet
-- version - Version file
+- http://bhqaws5wytimqfpa55z2hx54euyipdftncmvtd3ubde-192-168-1-108.ip.abtnet.io
+```
 
-## Development
+该地址打开就是一个 profile 页（数据在 dev 模式下，会按需填充）
 
-1. Make sure you have [@blocklet/cli](https://www.npmjs.com/package/@blocklet/cli) installed
+### 接口
 
-   Blocklet needs blocklet server as a dependency. So you need to install it first.
-   `npm install -g @blocklet/cli`
-   See details in [https://www.arcblock.io/docs/blocklet-developer/install-blocklet-cli](https://www.arcblock.io/docs/blocklet-developer/install-blocklet-cli)
+#### 返回格式
 
-2. Init blocklet server & start blocklet server
+数据的返回格式是统一的
 
-   Before starting an blocklet server, you need to init blocklet server.
-   `blocklet server init --mode=debug`
-   `blocklet server start`
-   See details in [https://www.arcblock.io/docs/blocklet-developer/getting-started](https://www.arcblock.io/docs/blocklet-developer/getting-started)
+```
+{
+    "state": "ok",
+    "msg": "",
+    "data": obj，
+}
+// state 如果不为 'ok' 则有异常
+// msg 是异常信息
+// data 当没有异常时，正常返回的数据会在这个里面
+// 例如
+{
+    "state": "ok",
+    "msg": "",
+    "data": {
+        "id": 1,
+        "name": "张三",
+        "birth_day": "1990-01-15",
+        "gender": 1,
+        "email": "zhangsan@example.com",
+        "phone": "13800138000",
+        "home_address": "北京市朝阳区某街道1号",
+        "work_address": "北京市海淀区某大厦15层",
+        "created_at": "2024-07-26 05:30:21"
+    }
+}
+```
 
-3. Go to the project directory `cd [name]`
-4. Install dependencies: `npm install` or `yarn`
-5. Start development server: `blocklet dev`
+#### user 列表
 
-## Bundle
+```
+GET /api/user/list?start=0&step=5
+默认打开分页功能
+start 为起始 id（含）， 默认 0
+step 为查询条数， 默认 10
+返回示例
+{
+    "state": "ok",
+    "msg": "",
+    "data": [
+        {
+            "id": 1,
+            "name": "张三",
+            "birth_day": "1990-01-15",
+            "gender": 1,
+            "email": "zhangsan@example.com",
+            "phone": "13800138000",
+            "home_address": "北京市朝阳区某街道1号",
+            "work_address": "北京市海淀区某大厦15层",
+            "created_at": "2024-07-26 05:30:21"
+        }
+    ]
+}
+```
 
-After developing a blocklet, you may need to bundle it. Use `npm run bundle` command.
+#### user 详情
 
-## Deploy
+```
+GET /api/user/info/:uid
+返回示例
+{
+    "state": "ok",
+    "msg": "",
+    "data": {
+        "id": 1,
+        "name": "张三",
+        "birth_day": "1990-01-15",
+        "gender": 1,
+        "email": "zhangsan@example.com",
+        "phone": "13800138000",
+        "home_address": "北京市朝阳区某街道1号",
+        "work_address": "北京市海淀区某大厦15层",
+        "created_at": "2024-07-26 05:30:21"
+    }
+}
+```
 
-- If you want to deploy this blocklet to local blocklet server, you can use `blocklet deploy .blocklet/bundle` command(Make sure the blocklet is bundled before deployment.)
-  > Or you can simply use `npm run deploy` command.
-- If you want to deploy this blocklet to remote blocklet server, you can use the command below.
+### user 创建
 
-  ```shell
-  blocklet deploy .blocklet/bundle --endpoint {your blocklet server url} --access-key {blocklet server access key} --access-secret {blocklet server access secret}
-  ```
+```
+POST /api/user/create
+{
+  "name": "张三",   // 长度介于 1 和 32 之间，必选
+  "birth_day": "1990-01-15", // 必选 需符合格式要求
+  "gender": 1, // 必选 0 男， 1 女
+  "email": "zhangsan@example.com", // 必选 需符合格式要求
+  "phone": "13800138000", // 必选 需符合格式要求
+  "home_address": "北京市朝阳区某街道1号", // 可选
+  "work_address": "北京市海淀区某大厦15层" // 可选
+}
+返回示例
+{
+    "state": "ok",
+    "msg": "",
+    "data": {
+        "id": 2   // 新建的数据 id
+    }
+}
+```
 
-  > Make sure the blocklet is bundled before deployment.
+### user 更新
 
-## Upload to blocklet store
+```
+POST /api/user/update/:uid
+{
+  "name": "张三",
+  "birth_day": "1990-01-15",
+  "gender": 1,
+  "email": "zhangsan@example.com",
+  "phone": "13800138000",
+  "home_address": "北京市朝阳区某街道1号",
+  "work_address": "北京市海淀区某大厦15层"
+}
 
-- If you want to upload the blocklet to any store for other users to download and use, you can following the following instructions.
+格式要求与 insert 时保持一致，但是传递的参数并不都是必选，传递几个就更新几个
 
-  Bump version at first.
-
-  ```shell
-  make bump-version
-  ```
-
-  Then config blocklet store url.
-  You can use those store url in below.
-
-  1. [https://store.blocklet.dev/](https://store.blocklet.dev/)
-  2. [https://dev.store.blocklet.dev/](https://dev.store.blocklet.dev/)
-  3. A blocklet store started by yourself.
-     > Make sure you have installed a `blocklet store` on your own blocklet server. Check it on here: [https://store.blocklet.dev/blocklet/z8ia29UsENBg6tLZUKi2HABj38Cw1LmHZocbQ](https://store.blocklet.dev/blocklet/z8ia29UsENBg6tLZUKi2HABj38Cw1LmHZocbQ)
-
-  ```shell
-  blocklet config set store {store url}
-  ```
-
-  Get a `accessToken` from blocklet store.
-
-  > Why we need a `accessToken`?
-  > A `accessToken` is genrate by blocklet store, which help us upload our blocklet to any store.
-
-  Set `accessToken` to blocklet config
-
-  ```shell
-  blocklet config set accessToken {accessToken}
-  ```
-
-  Upload a new version to a store.
-
-  > Make sure the blocklet is bundled before upload.
-
-  ```shell
-  blocklet upload
-  ```
-
-  Or you can simply use `npm run upload` command.
-
-- You also can upload a new version to blocklet store by Github CI.
-  Bump version at first.
-
-  ```shell
-  make bump-version
-  ```
-
-  Push your code to Github main/master branch, or make a pull request to the main/master branch.
-  The CI workflow will automatically upload a new version to a store.
-
-## Q & A
-
-1. Q: How to change a blocklet's name?
-
-   A: Change the `name` field in the `package.json` file, change the `name` field in the `blocklet.yml` file.
-
-   You can also change the `title` field and `description` field in the `blocklet.yml` file.
-
-   Run `blocklet meta` command, you will get a `did` config, copy the `did` value.
-
-   Replace this command `"bundle": "vite build --base /.blocklet/proxy/<%= did %>",` in `package.json`
-
-   Replace `did` field in the `blocklet.yml`
-
-2. Q: How to change a blocklet's logo?
-
-   Change the `logo.png` file root folder.
-
-   Or you can change the `logo` field in the `blocklet.yml` file.
-
-   > Make sure you have added the logo path to the `blocklet.yml` file `files` field.
-
-## Learn More
-
-- Full specification of `blocklet.yml`: [https://github.com/blocklet/blocklet-specification/blob/main/docs/meta.md](https://github.com/blocklet/blocklet-specification/blob/main/docs/meta.md)
-- Full document of Blocklet Server & blocklet development: [https://www.arcblock.io/docs/blocklet-developer](https://www.arcblock.io/docs/blocklet-developer)
-
-## License
-
-The code is licensed under the Apache 2.0 license found in the
-[LICENSE](LICENSE) file.
+正常返回示例
+{
+    "state": "ok",
+    "msg": ""
+}
+异常返回示例
+{
+    "state": "ValidationError",
+    "msg": "\"email\" must be a valid email"
+}
+```
