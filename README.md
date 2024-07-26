@@ -98,7 +98,7 @@ GET /api/user/info/:uid
 }
 ```
 
-### user 创建
+#### user 创建
 
 ```
 POST /api/user/create
@@ -121,7 +121,7 @@ POST /api/user/create
 }
 ```
 
-### user 更新
+#### user 更新
 
 ```
 POST /api/user/update/:uid
