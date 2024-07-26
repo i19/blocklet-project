@@ -29,9 +29,6 @@ importers:
       '@ocap/wallet':
         specifier: ^1.18.126
         version: 1.18.126
-      axios:
-        specifier: ^1.7.2
-        version: 1.7.2(debug@4.3.5)
       better-sqlite3:
         specifier: ^11.1.2
         version: 11.1.2
