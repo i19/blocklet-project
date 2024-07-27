@@ -10,16 +10,16 @@ class Model {
   #insertValidator;
   #updateValidator;
   #initialized;
-  #columnNames;
 
   constructor({ tableName, columns, insertValidator }) {
     this.#tableName = tableName;
     this.#insertValidator = insertValidator;
 
-    // without id and created_at column
-    this.#columnNames = Object.keys(columns).filter((k) => k !== 'id' && k !== 'created_at');
     // 因为采用了更宽松的限制规则，所以可以动态生成 updateValidator 无需再传递
-    this.#updateValidator = insertValidator.fork(this.#columnNames, (schema) => schema.optional());
+    this.#updateValidator = insertValidator.fork(
+      Object.keys(columns).filter((k) => k !== 'id' && k !== 'created_at'),
+      (schema) => schema.optional(),
+    );
     // 添加默认字段，并确保 id 在第一列
     this.#columns = {
       id: 'INTEGER PRIMARY KEY AUTOINCREMENT',
